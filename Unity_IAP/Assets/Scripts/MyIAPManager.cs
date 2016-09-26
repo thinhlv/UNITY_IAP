@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.Purchasing;
 using System;
+using UnityEngine.Purchasing.Security;
 
 public class MyIAPManager : IStoreListener
 {
@@ -33,9 +34,9 @@ public class MyIAPManager : IStoreListener
         //restore purchase if user reinstall app
         //for apple app
 
-        /*extensions.GetExtension<IAppleExtensions>().RestoreTransactions(result =>
+        extensions.GetExtension<IAppleExtensions>().RestoreTransactions(result =>
         {
-            if(result)
+            if (result)
             {
                 //infom that restore complete
                 //this does not mean everything was restored
@@ -44,7 +45,19 @@ public class MyIAPManager : IStoreListener
             {
                 //restore failed
             }
-        });*/
+        });
+
+        extensions.GetExtension<IAppleExtensions>().RefreshAppReceipt(receipt =>
+        {
+            // This handler is invoked if the request is successful.
+            // Receipt will be the latest app receipt.
+            Console.WriteLine(receipt);
+        }, () =>
+        {
+            // This handler will be invoked if the request fails,
+            // such as if the network is unavailable or the user
+            // enters the wrong password.
+        });
     }
 
     /// <summary>
@@ -64,7 +77,7 @@ public class MyIAPManager : IStoreListener
     /// <param name="p"></param>
     public void OnPurchaseFailed(Product i, PurchaseFailureReason p)
     {
-        if(p == PurchaseFailureReason.PurchasingUnavailable)
+        if (p == PurchaseFailureReason.PurchasingUnavailable)
         {
             //IAP may be disable in device setting
         }
@@ -77,6 +90,55 @@ public class MyIAPManager : IStoreListener
     /// <returns></returns>
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs e)
     {
+        bool validPurchase = true;
+        //Unity IAP validation is only include on these platform
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX
+        var validator = new CrossPlatformValidator(GooglePlayTangle.Data(), AppleTangle.Data(), Application.bundleIdentifier);
+        try
+        {
+            //On google play, result has single product ID
+            //On apple stores, receipts contain multiple product
+            var result = validator.Validate(e.purchasedProduct.receipt);
+            Debug.Log("Receipt is valid. Contents:");
+            foreach (IPurchaseReceipt productReceipt in result)
+            {
+                Debug.Log(productReceipt.productID);
+                Debug.Log(productReceipt.purchaseDate);
+                Debug.Log(productReceipt.transactionID);
+
+                GooglePlayReceipt google = productReceipt as GooglePlayReceipt;
+                if (null != google)
+                {
+                    // This is Google's Order ID.
+                    // Note that it is null when testing in the sandbox
+                    // because Google's sandbox does not provide Order IDs.
+                    Debug.Log(google.transactionID);
+                    Debug.Log(google.purchaseState);
+                    Debug.Log(google.purchaseToken);
+                }
+
+                AppleInAppPurchaseReceipt apple = productReceipt as AppleInAppPurchaseReceipt;
+                if (null != apple)
+                {
+                    Debug.Log(apple.originalTransactionIdentifier);
+                    Debug.Log(apple.subscriptionExpirationDate);
+                    Debug.Log(apple.cancellationDate);
+                    Debug.Log(apple.quantity);
+                }
+
+            }
+        }
+        catch (IAPSecurityException)
+        {
+            Debug.Log("Invalid receipt, not unlocking content");
+            validPurchase = false;
+        }
+#endif
+        if (validPurchase)
+        {
+            // Unlock the appropriate content here.
+        }
+
         return PurchaseProcessingResult.Complete;
     }
 
