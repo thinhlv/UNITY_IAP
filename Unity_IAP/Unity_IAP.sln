@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity_IAP.CSharp.Plugins", "Unity_IAP.CSharp.Plugins.csproj", "{9B137414-BF68-1E40-C853-EF7D424BFC00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity_IAP.CSharp", "Unity_IAP.CSharp.csproj", "{32F4920F-E9D8-CBBF-0367-02718AF2CD46}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B137414-BF68-1E40-C853-EF7D424BFC00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B137414-BF68-1E40-C853-EF7D424BFC00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B137414-BF68-1E40-C853-EF7D424BFC00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B137414-BF68-1E40-C853-EF7D424BFC00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32F4920F-E9D8-CBBF-0367-02718AF2CD46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32F4920F-E9D8-CBBF-0367-02718AF2CD46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32F4920F-E9D8-CBBF-0367-02718AF2CD46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32F4920F-E9D8-CBBF-0367-02718AF2CD46}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
